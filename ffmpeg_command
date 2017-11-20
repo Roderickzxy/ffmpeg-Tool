@@ -1,0 +1,14 @@
+# concat videos with different resoluation and rate to one video with same resoluation and rate. but it is not suitable for flv format.
+$ ffmpeg -i test1.mp4 -i test2.mp4 -filter_complex \
+"[0:v]scale=480x270[v0]; \
+ [1:v]scale=480x270[v1]; \
+ [v0][0:a][v1][1:a]concat=n=2:v=1:a=1[v][a]" \
+-map "[v]" -map "[a]" -c:v libx264 -b:v 300k -acodec libfdk_aac -ab 64k -y output.mp4
+
+
+# concat videos with different resoluation and rate to one video with same resoluation and rate. (contain flv format)
+$ ffmpeg -i test1.flv -i test2.flv -filter_complex \
+"[0:v]scale=480x270,setsar=sar=1[v0]; \
+ [1:v]scale=480x270,setsar=sar=1[v1]; \
+ [v0][0:a][v1][1:a]concat=n=2:v=1:a=1[v][a]" \
+-map "[v]" -map "[a]" -c:v libx264 -b:v 300k -acodec libfdk_aac -ab 64k -y output.mp4
